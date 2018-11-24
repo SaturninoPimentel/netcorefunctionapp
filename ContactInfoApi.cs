@@ -64,7 +64,7 @@ namespace FunctionCore
             return new OkObjectResult(result);
         }
 
-        [FunctionName("GetContactById")]
+        [FunctionName("GetContactInfoById")]
         public static IActionResult GetContactInfoById(
             [HttpTrigger(AuthorizationLevel.Function,"get",Route="ContactInfo/{id}")]HttpRequest request,
             ILogger log,
