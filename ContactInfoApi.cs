@@ -80,7 +80,6 @@ namespace FunctionCore
             else
             {
                 contactInfoDTO = new ContactInfoDTO();
-                contactInfoDTO.FirstName=contactInfoResult.FirstName;
                 contactInfoDTO.LastName=contactInfoResult.LastName;
                 contactInfoDTO.Number=contactInfoResult.Number;
                 contactInfoDTO.Id=contactInfoResult.Id;
