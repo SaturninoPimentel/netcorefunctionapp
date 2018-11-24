@@ -116,7 +116,7 @@ ConfigureFunctionApp ()
     --resource-group $resourceGroupName \
     --consumption-plan-location westus \
     --name $functionAppName \
-    --os-type Linux \
+    --os-type Windows \
     --runtime dotnet \
     --storage-account $storageAccountName
     echo "function app created!"
