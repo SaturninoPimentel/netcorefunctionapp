@@ -10,13 +10,13 @@ ConfigureAzureSubscription()
     # authenticate to azure suscription
     az login
   
-    echo "Verify your default subscription where you created the project resources:"
+    echo "Listado de suscripciones, por favor seleccione donde desea crear el grupo de recursos"
     az account list 
 
-    read -p "Paste the id of the subscription where you created the project resources: " subscriptionId
+    read -p "Escriba el id de la suscripción donde creará el grupo de recursos: " subscriptionId
     az account set --subscription $subscriptionId
 
-    echo "The subscription you have selected is: "
+    echo "La suscripción que ha seleccionado es: "
     az account show
 
     # all to lower case
@@ -27,7 +27,7 @@ ConfigureAzureSubscription()
 
 ProceedConfiguration ()
 {
-    read -p "Introduce the name of your project Resource Group: " resourceGroupName
+    read -p "Ingresa el nombre de tu grupo de recursos: " resourceGroupName
 
     az group create \
     --location southcentralus \
@@ -39,7 +39,7 @@ ProceedConfiguration ()
 
     ConfigureFunctionApp
 
-    echo "Great, your backend has been configured successfully!"
+    echo "Excelente, tu backend se ha configurado de forma éxitosa!"
     #more code here
     exit 0
 }
@@ -47,27 +47,27 @@ ProceedConfiguration ()
 ConfigureStorage()
 {
     storageAccountName=$resourceGroupName"storage"
-    echo "Storage account name: " $storageAccountName
+    echo "Nombre de storage account: " $storageAccountName
 
     az storage account create --name $storageAccountName \
     --location southcentralus \
     --resource-group $resourceGroupName \
     --sku Standard_LRS
-    echo "Storage created!"
+    echo "Storage creado!"
 }
 
 ConfigureDatabase ()
 {
-    echo "* Configuring: Database>>"
+    echo "* Configurando: Database>>"
 
     collectionName="ContactInfoRecords"
-    echo "Collection name: " $collectionName
+    echo "Nombre de Collection: " $collectionName
     
     databaseAccountName=$resourceGroupName"-cos"
-    echo "Account name: " $databaseAccountName
+    echo "Nombre de cuenta: " $databaseAccountName
     
     databaseName="ContactInfoDB"
-    echo "Database name: " $databaseName
+    echo "Nombre de database: " $databaseName
    
    # Create a MongoDB API Cosmos DB account
     az cosmosdb create \
@@ -86,14 +86,14 @@ ConfigureDatabase ()
 
     echo "Cadena de conexión mongodb"
     echo $databaseUri
-    echo "Account created!"
+    echo "cuenta creada!"
 
     # create database 
     az cosmosdb database create \
     --name $databaseAccountName \
     --db-name $databaseName \
     --resource-group $resourceGroupName
-    echo "Database created!"
+    echo "Base de datos creada!"
 
     # create collection in documentDB database
     az cosmosdb collection create \
@@ -101,15 +101,15 @@ ConfigureDatabase ()
 	--name $databaseAccountName \
 	--db-name $databaseName \
 	--resource-group $resourceGroupName    
-    echo "Database configured successfully!"
+    echo "Base de datos configurada éxitosamente!"
 }
 
 ConfigureFunctionApp ()
 {
-    echo "* Configuring: Function App>>"
+    echo "* Configurando: Function App>>"
 
     functionAppName=$resourceGroupName"-func"
-    echo "Function App name: " $functionAppName
+    echo "Nombre de function App: " $functionAppName
     
     # create azure function
     az functionapp create \
@@ -119,7 +119,7 @@ ConfigureFunctionApp ()
     --os-type Windows \
     --runtime dotnet \
     --storage-account $storageAccountName
-    echo "function app created!"
+    echo "function app creada!"
 
     # configure database uri
     az functionapp config appsettings set --resource-group $resourceGroupName --name $functionAppName --settings COSMOSDB_CONNECTIONSTRING=$databaseUri
@@ -130,7 +130,7 @@ ConfigureFunctionApp ()
     # configure database person collection
     az functionapp config appsettings set --resource-group $resourceGroupName --name $functionAppName --settings COSMOSDB_CONTACTINFOCOLLECTION=ContactInfoRecords
     
-    echo "Function App configured successfully!"
+    echo "Function App configurada éxitosamente!"
 }
 
 ConfigureAzureSubscription
